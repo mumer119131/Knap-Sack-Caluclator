@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KnapSack Calculator</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+    
+    <h1 class="w3-center">KnapSack</h1>
+    <form method="POST" action="{% url 'home' %}" class="w3-container w3-center">
+        {% csrf_token %}
+        <input type="number" placeholder="Enter the number of values " name="no_of_values"><br>
+        <input type="submit" style="margin-top:20px;" value="Generate"><br>
+    </form>
+
+    
+    {% if no_of_values %}
+        
+        <form action="" method="POST" id="val_form" class="w3-container w3-center">
+            {% csrf_token %}
+        <div class="w3-center" style="margin-top: 20px;">
+            <input type="radio" name="type" name="0-1" value="0-1 KnapSack" checked="checked">
+            <label for="0-1">0-1 KnapSack</label>
+            <input type="radio" name="type" name="fractional" value="Fractional KnapSack">
+            <label for="fractional">Fractional KnapSack</label>
+        </div>
+        <input type="number" name="sackweight" placeholder="Enter the Sack Capacity" style="margin-bottom: 20px; margin-top: 20px;"><br>
+        <h5>Weights</h4>&nbsp;&nbsp;
+        {% for i in no_of_values|make_list %}
+            <input type="number" style="padding: 5dp; width: 5%;" placeholder="w{{ forloop.counter }}" name="w{{ forloop.counter }}">
+        {% endfor %}
+        <br><br><br>
+        <h5>Profits</h4>&nbsp;&nbsp;
+        {% for i in no_of_values|make_list %}
+            <input type="number" style="padding: 5dp; width: 5%;" placeholder="p{{ forloop.counter }}" name="p{{ forloop.counter }}">
+        {% endfor %}
+        <br>
+        <input type="submit" value="Calculate" style="margin-top: 20px;">
+        </form>
+        <div class="message w3-center" style="margin-top: 30px; color: red;"></div>
+    {% endif %}
+    
+
+    <script>
+        
+        $('#val_form').submit(function (e) {
+                $.post('/cal/', $(this).serialize(), function (data) {
+                    $('.message').html(data.message);
+                    $('div.message').text(data)
+                // of course you can do something more fancy with your respone
+            });
+            e.preventDefault();
+        });
+    </script>
+
+</body>
+</html>
